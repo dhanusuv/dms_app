@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Form</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Data Management Application</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="dataset.html">Add Dataset</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section id="dataset-form">
+            <h2>Add Dataset</h2>
+            <form id="datasetForm">
+                <label for="datasetName">Dataset Name:</label>
+                <input type="text" id="datasetName" name="datasetName" required><br>
+                
+                <label for="frequency">Frequency of Update:</label>
+                <input type="text" id="frequency" name="frequency" required><br>
+                
+                <label for="source">Source of Dataset:</label>
+                <input type="text" id="source" name="source" required><br>
+                
+                <label for="version">Version Name:</label>
+                <input type="text" id="version" name="version" required><br>
+                
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+        <section id="dataset-grid">
+            <h2>Dataset Details</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dataset Name</th>
+                        <th>Frequency</th>
+                        <th>Source</th>
+                        <th>Version</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="datasetTableBody">
+                    <!-- Data will be inserted here dynamically -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Data Management Application</p>
+    </footer>
+    <script src="scripts.js"></script>
+</body>
+</html>
