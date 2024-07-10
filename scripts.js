@@ -4,11 +4,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch existing datasets and populate the table
     fetch('http://localhost:5000/datasets')
-        .then(response => response.json())
+        .then(response => {
+            console.log('Fetching datasets...');
+            return response.json();
+        })
         .then(data => {
+            console.log('Fetched datasets:', data);
             data.forEach(record => {
                 addRowToTable(record);
             });
+        })
+        .catch(error => {
+            console.error('Error fetching datasets:', error);
         });
 
     form.addEventListener('submit', (event) => {
@@ -35,16 +42,19 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => response.json())
         .then(newRecord => {
+            console.log('New record added:', newRecord);
             addRowToTable(newRecord);
             form.reset();
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Error posting new dataset:', error);
         });
     });
 
     function addRowToTable(record) {
+        console.log('Adding row for record:', record);
         const newRow = document.createElement('tr');
+        newRow.setAttribute('data-id', record.id); // Add this line to set data-id attribute
         newRow.innerHTML = `
             <td>${record.dataset_name}</td>
             <td>${record.frequency}</td>
@@ -69,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => response.json())
         .then(deletedRecord => {
+            console.log('Deleted record:', deletedRecord);
             const row = document.querySelector(`tr[data-id='${deletedRecord.id}']`);
             if (row) {
                 row.remove();
@@ -77,7 +88,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Error deleting dataset:', error);
         });
     }
+
+    // Method to fetch data from the PostgreSQL table and update the table on the web application page
+    function fetchDataAndPopulateTable() {
+        fetch('http://localhost:5000/datasets')
+            .then(response => {
+                console.log('Fetching datasets...');
+                return response.json();
+            })
+            .then(data => {
+                console.log('Fetched datasets:', data);
+                tableBody.innerHTML = ''; // Clear existing table body
+                data.forEach(record => {
+                    addRowToTable(record);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+    // Call fetchDataAndPopulateTable to load data when the page loads
+    fetchDataAndPopulateTable();
 });

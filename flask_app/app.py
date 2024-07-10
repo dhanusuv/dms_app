@@ -12,10 +12,22 @@ engine = create_engine(db_uri)
 
 @app.route('/datasets', methods=['GET'])
 def get_datasets():
+    allData = []
     with engine.connect() as connection:
-        result = connection.execute(text('SELECT * FROM dms_app.datasets'))
-        datasets = [dict(row) for row in result]
-    return jsonify(datasets)
+        result = connection.execute(text("""SELECT * FROM dms_app_tenv.datasets""")).fetchall()
+        #print(result)
+        for row in result:
+            dataset = {
+                'id': row[0],
+                'dataset_name': row[1],
+                'frequency': row[2],
+                'source': row[3],
+                'version': row[4]
+            }
+           # print(dataset)
+            allData.append(dataset)
+    print(allData)        
+    return jsonify(allData)
 
 @app.route('/datasets', methods=['POST'])
 def add_dataset():
@@ -26,7 +38,7 @@ def add_dataset():
                 cursor = connection.connection.cursor()
                 cursor.execute(
                     '''
-                    INSERT INTO dms_app.datasets (dataset_name, frequency, source, version)
+                    INSERT INTO dms_app_tenv.datasets (dataset_name, frequency, source, version)
                     VALUES (%s, %s, %s, %s)
                     RETURNING id, dataset_name, frequency, source, version
                     ''',
@@ -57,7 +69,7 @@ def delete_dataset(id):
                 cursor = connection.connection.cursor()
                 cursor.execute(
                     '''
-                    DELETE FROM dms_app.datasets
+                    DELETE FROM dms_app_tenv.datasets
                     WHERE id = %s
                     RETURNING id, dataset_name, frequency, source, version
                     ''',
