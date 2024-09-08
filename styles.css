@@ -61,7 +61,7 @@ form label {
 }
 
 form input {
-    width: 100%;
+    width: 50%;
     padding: 0.5em;
     margin-top: 0.5em;
 }
@@ -92,4 +92,21 @@ table, th, td {
 th, td {
     padding: 0.5em;
     text-align: left;
+}
+/* Other existing styles for body, header, etc. */
+
+/* Add these new rules at the end */
+#datasetForm {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
+#datasetForm label {
+    flex-basis: 30%;
+}
+
+#datasetForm input {
+    flex: 1;
+    padding: 0.5em;
 }
