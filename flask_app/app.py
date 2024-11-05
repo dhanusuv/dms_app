@@ -15,7 +15,6 @@ def get_datasets():
     allData = []
     with engine.connect() as connection:
         result = connection.execute(text("""SELECT * FROM dms_app_tenv.datasets""")).fetchall()
-        #print(result)
         for row in result:
             dataset = {
                 'id': row[0],
@@ -24,9 +23,8 @@ def get_datasets():
                 'source': row[3],
                 'version': row[4]
             }
-           # print(dataset)
             allData.append(dataset)
-    print(allData)        
+    print("All Data:", allData)        
     return jsonify(allData)
 
 @app.route('/datasets', methods=['POST'])
@@ -51,12 +49,24 @@ def add_dataset():
                 )
                 new_record = cursor.fetchone()
                 trans.commit()
+                
+                # Map the new record to a dictionary
                 if new_record:
-                    return jsonify(dict(new_record))
+                    dataset = {
+                        'id': new_record[0],
+                        'dataset_name': new_record[1],
+                        'frequency': new_record[2],
+                        'source': new_record[3],
+                        'version': new_record[4]
+                    }
+                    print("Inserted New Record:", dataset)
+                    return jsonify(dataset)
                 else:
+                    print("Insert failed: No record returned.")
                     return jsonify({'error': 'Failed to insert dataset'}), 500
             except Exception as e:
                 trans.rollback()
+                print("Error inserting dataset:", str(e))
                 return jsonify({'error': str(e)}), 500
             finally:
                 cursor.close()
@@ -77,12 +87,24 @@ def delete_dataset(id):
                 )
                 deleted_record = cursor.fetchone()
                 trans.commit()
+                
+                # Map the deleted record to a dictionary
                 if deleted_record:
-                    return jsonify(dict(deleted_record))
+                    dataset = {
+                        'id': deleted_record[0],
+                        'dataset_name': deleted_record[1],
+                        'frequency': deleted_record[2],
+                        'source': deleted_record[3],
+                        'version': deleted_record[4]
+                    }
+                    print("Deleted Record:", dataset)
+                    return jsonify(dataset)
                 else:
+                    print("Delete failed: Dataset not found.")
                     return jsonify({'error': 'Dataset not found'}), 404
             except Exception as e:
                 trans.rollback()
+                print("Error deleting dataset:", str(e))
                 return jsonify({'error': str(e)}), 500
             finally:
                 cursor.close()
