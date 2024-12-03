@@ -52,15 +52,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function addRowToTable(record) {
-        console.log('Adding row for record:', record);
         const newRow = document.createElement('tr');
-        newRow.setAttribute('data-id', record.id); // Add this line to set data-id attribute
         newRow.innerHTML = `
+            <td>${record.id}</td>
             <td>${record.dataset_name}</td>
             <td>${record.frequency}</td>
             <td>${record.source}</td>
             <td>${record.version}</td>
             <td>
+                <button onclick="window.location.href='details.html?id=${record.id}'">Select</button>
                 <button onclick="editRecord(${record.id})">Edit</button>
                 <button onclick="deleteRecord(${record.id})">Delete</button>
             </td>
@@ -73,6 +73,12 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Edit record with id:', id);
     }
 
+    window.selectRecord = function (id) {
+        console.log('Select record with id:', id);
+        // Open the details.html page with the record ID as a query parameter
+        window.open(`details.html?id=${id}`, '_blank');
+    };
+    
     window.deleteRecord = function(id) {
         fetch(`http://localhost:5000/datasets/${id}`, {
             method: 'DELETE'
